@@ -1,0 +1,15 @@
+# Configuración de Entorno
+.env
+.gemini/
+
+# Dependencias
+node_modules/
+
+# Archivos de Sistema / IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Scripts de Deploy
+# .scripts/ (Versionado en GitHub pero excluido del host)

@@ -1,0 +1,121 @@
+/* Estilos generales */
+body {
+    font-family: 'Calibri', Arial, sans-serif;
+    background-color: #F6F6F6;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+header {
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    height: 50px;
+}
+
+.btn {
+    background-color: #51B8AC;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #3fa89c;
+}
+
+.btn-especial {
+    background-color: #0E544C;
+}
+
+.btn-especial:hover {
+    background-color: #0c473f;
+}
+
+/* Estilos para login */
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Estilos para ventas */
+.ventas-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 20px;
+}
+
+.productos-grid {
+    flex: 1;
+    min-width: 300px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.producto-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.producto-card:hover {
+    transform: translateY(-5px);
+}
+
+.pedido-container {
+    flex: 1;
+    min-width: 300px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .ventas-container {
+        flex-direction: column;
+    }
+    
+    .productos-grid, .pedido-container {
+        width: 100%;
+    }
+}
+
+/* Más estilos para tablas, formularios, etc. */
