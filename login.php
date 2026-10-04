@@ -3,10 +3,19 @@ require_once 'includes/config.php';
 require_once 'includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($_POST['password'] === PASSWORD) {
+    $clave = $_POST['password'] ?? '';
+
+    if ($clave === PASSWORD_VENTAS) {
         session_start();
         $_SESSION['loggedin'] = true;
+        $_SESSION['rol'] = 'ventas';
         header('Location: /ventas/');
+        exit;
+    } elseif ($clave === PASSWORD_CIERRES) {
+        session_start();
+        $_SESSION['loggedin'] = true;
+        $_SESSION['rol'] = 'cierres';
+        header('Location: /cierres/');
         exit;
     } else {
         $error = "Contraseña incorrecta";
