@@ -14,10 +14,17 @@ if (!$cierre) {
     exit;
 }
 
-// 2. Convertir la fecha UTC del cierre a UTC-6 (hora local)
-$fechaCierreUTC = new DateTime($cierre['fecha_hora'], new DateTimeZone('UTC'));
-$fechaCierreUTC->sub(new DateInterval('PT6H')); // Restar 6 horas
-$fechaCierreLocal = $fechaCierreUTC->format('Y-m-d H:i:s');
+// 2. Determinar la fecha local de cierre
+// Si las ventas coinciden directamente con cierre['fecha_hora'] (cierres nuevos), se usa directamente.
+// Si no hay coincidencias (cierres antiguos guardados con fecha_hora en UTC), se resta 6 horas como fallback.
+$fechaCierreLocal = $cierre['fecha_hora'];
+$checkStmt = $db->prepare("SELECT COUNT(*) FROM ventas WHERE fecha_cierre = ?");
+$checkStmt->execute([$fechaCierreLocal]);
+if ($checkStmt->fetchColumn() == 0) {
+    $fechaObj = new DateTime($cierre['fecha_hora']);
+    $fechaObj->sub(new DateInterval('PT6H'));
+    $fechaCierreLocal = $fechaObj->format('Y-m-d H:i:s');
+}
 
 // 3. Consulta modificada para usar datos históricos de detalles_venta
 $query = "
@@ -304,7 +311,7 @@ foreach ($productosVendidos as $producto) {
     
     <main class="container">
         <h1>Detalle de Cierre #<?= $cierre['id'] ?></h1>
-        <p>Fecha: <?= formatearFecha($cierre['fecha_hora']) ?></p>
+        <p>Fecha: <?= formatearFecha($fechaCierreLocal) ?></p>
         
         <div class="resumen-grid">
             <div class="resumen-item">

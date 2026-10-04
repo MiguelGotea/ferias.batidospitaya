@@ -446,6 +446,7 @@ $ventaActiva = obtenerVentaActiva();
             const btnImprimir = document.getElementById('imprimirBtn');
             const btnCerrarEvento = document.getElementById('cerrarEvento');
             const btnPagos = document.querySelectorAll('.btn-pago');
+            const inputNombreCliente = document.getElementById('nombreCliente');
             
             // Función para actualizar el estado del botón imprimir
             function actualizarEstadoBotonImprimir() {
@@ -587,7 +588,7 @@ $ventaActiva = obtenerVentaActiva();
                     const ventaData = {
                         productos: productosValidados,
                         tipoPago: tipoPagoSeleccionado,
-                        nombreCliente: document.getElementById('nombreCliente').value.trim() || null
+                        nombreCliente: (inputNombreCliente ? inputNombreCliente.value.trim() : '') || null
                     };
             
                     // Mostrar datos que se enviarán (para diagnóstico)
@@ -625,6 +626,9 @@ $ventaActiva = obtenerVentaActiva();
                     // Reiniciar pedido
                     productosSeleccionados = [];
                     tipoPagoSeleccionado = null;
+                    if (inputNombreCliente) {
+                        inputNombreCliente.value = '';
+                    }
                     btnPagos.forEach(b => b.classList.remove('active'));
                     actualizarTablaPedido();
             

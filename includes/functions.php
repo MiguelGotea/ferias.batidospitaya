@@ -23,8 +23,10 @@ function obtenerProductos() {
 
 function crearVenta($tipoPago) {
     global $db;
-    $stmt = $db->prepare("INSERT INTO ventas (tipo_pago) VALUES (?)");
-    $stmt->execute([$tipoPago]);
+    $fechaActual = date('Y-m-d H:i:s');
+    $fechaHoy = date('Y-m-d');
+    $stmt = $db->prepare("INSERT INTO ventas (tipo_pago, fecha_hora, fecha_registro) VALUES (?, ?, ?)");
+    $stmt->execute([$tipoPago, $fechaActual, $fechaHoy]);
     return $db->lastInsertId();
 }
 
@@ -63,15 +65,18 @@ function procesarVenta($productos, $tipoPago, $nombreCliente = null) {
     try {
         $db->beginTransaction();
         
-        // Crear venta
-        $stmtVenta = $db->prepare("INSERT INTO ventas (tipo_pago, nombre_cliente) VALUES (?, ?)");
-        $stmtVenta->execute([$tipoPago, $nombreCliente]);
+        $fechaActual = date('Y-m-d H:i:s');
+        $fechaHoy = date('Y-m-d');
+        
+        // Crear venta con fecha_hora y fecha_registro de Nicaragua
+        $stmtVenta = $db->prepare("INSERT INTO ventas (tipo_pago, nombre_cliente, fecha_hora, fecha_registro) VALUES (?, ?, ?, ?)");
+        $stmtVenta->execute([$tipoPago, $nombreCliente, $fechaActual, $fechaHoy]);
         $ventaId = $db->lastInsertId();
         
-        // Agregar detalles (capturando nombre y precio actual)
+        // Agregar detalles (capturando nombre, precio actual y hora)
         $stmtDetalle = $db->prepare("INSERT INTO detalles_venta 
-                                   (venta_id, producto_id, cantidad, precio_unitario, notas, nombre_producto, precio_unitario_original) 
-                                   VALUES (?, ?, ?, ?, ?, ?, ?)");
+                                   (venta_id, producto_id, cantidad, precio_unitario, notas, nombre_producto, precio_unitario_original, fecha_hora) 
+                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         
         foreach ($productos as $producto) {
             // Validación más flexible para permitir precios 0
@@ -98,7 +103,8 @@ function procesarVenta($productos, $tipoPago, $nombreCliente = null) {
                 $precioFinal,  // Usar precio de la BD
                 $producto['notas'] ?? '',
                 $productoActual['nombre'],  // Nombre actual
-                $productoActual['precio']   // Precio actual
+                $productoActual['precio'],   // Precio actual
+                $fechaActual
             ]);
         }
         
@@ -153,11 +159,11 @@ function cerrarEvento() {
             $stmtCerrar->execute([$fechaCierre, $venta['id']]);
         }
         
-        // Registrar cierre
+        // Registrar cierre con la misma fecha_hora exacta de Nicaragua
         $stmtCierre = $db->prepare("INSERT INTO cierres 
-                                   (total_ventas, total_pos, total_efectivo) 
-                                   VALUES (?, ?, ?)");
-        $stmtCierre->execute([$totalVentas, $totalPos, $totalEfectivo]);
+                                   (fecha_hora, total_ventas, total_pos, total_efectivo) 
+                                   VALUES (?, ?, ?, ?)");
+        $stmtCierre->execute([$fechaCierre, $totalVentas, $totalPos, $totalEfectivo]);
         
         $db->commit();
         return ['success' => true];
@@ -184,7 +190,8 @@ function obtenerVentasPorCierre($cierreId) {
     global $db;
     $stmt = $db->prepare("SELECT v.* 
                          FROM ventas v
-                         WHERE v.fecha_cierre = (SELECT fecha_hora FROM cierres WHERE id = ?)
+                         JOIN cierres c ON (v.fecha_cierre = c.fecha_hora OR v.fecha_cierre = DATE_SUB(c.fecha_hora, INTERVAL 6 HOUR))
+                         WHERE c.id = ?
                          ORDER BY v.id");
     $stmt->execute([$cierreId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -207,7 +214,8 @@ function obtenerProductosVendidosPorCierre($cierreId) {
         FROM detalles_venta dv
         JOIN productos p ON dv.producto_id = p.id
         JOIN ventas v ON dv.venta_id = v.id
-        WHERE v.fecha_cierre = (SELECT fecha_hora FROM cierres WHERE id = ?)
+        JOIN cierres c ON (v.fecha_cierre = c.fecha_hora OR v.fecha_cierre = DATE_SUB(c.fecha_hora, INTERVAL 6 HOUR))
+        WHERE c.id = ?
         ORDER BY v.fecha_hora, dv.venta_id
     ";
     
@@ -245,7 +253,7 @@ function obtenerProductosDeCierre($cierreId) {
             dv.precio_unitario,
             dv.notas
         FROM cierres c
-        JOIN ventas v ON v.fecha_cierre = c.fecha_hora
+        JOIN ventas v ON (v.fecha_cierre = c.fecha_hora OR v.fecha_cierre = DATE_SUB(c.fecha_hora, INTERVAL 6 HOUR))
         JOIN detalles_venta dv ON dv.venta_id = v.id
         JOIN productos p ON p.id = dv.producto_id
         WHERE c.id = ?
