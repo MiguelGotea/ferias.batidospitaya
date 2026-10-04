@@ -394,6 +394,28 @@ $ventaActiva = obtenerVentaActiva();
         <button id="cerrarEvento" class="btn btn-especial btn-header">CERRAR EVENTO</button>
     </header>
 
+    <?php if (isset($_GET['aviso']) && $_GET['aviso'] === 'ventas_abiertas'): ?>
+    <div id="avisoVentasAbiertas" style="
+        background-color: #e65100;
+        color: white;
+        text-align: center;
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: bold;
+        position: sticky;
+        top: 60px;
+        z-index: 99;
+    ">
+        ⚠️ No puedes ver los cierres mientras hay ventas en curso. Primero cierra el evento.
+    </div>
+    <script>
+        setTimeout(function() {
+            var aviso = document.getElementById('avisoVentasAbiertas');
+            if (aviso) aviso.style.display = 'none';
+        }, 4000);
+    </script>
+    <?php endif; ?>
+
     <main class="container-ventas">
         <section>
             <h2>Productos Disponibles</h2>

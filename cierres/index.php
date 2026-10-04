@@ -2,6 +2,15 @@
 require_once '../includes/auth.php';
 require_once '../includes/functions.php';
 
+// Guard: el usuario de ventas no puede ver cierres si hay ventas abiertas
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] === 'ventas') {
+    $stmtAbiertas = $db->query("SELECT COUNT(*) FROM ventas WHERE cerrada = 0");
+    if ($stmtAbiertas->fetchColumn() > 0) {
+        header('Location: /ventas/?aviso=ventas_abiertas');
+        exit;
+    }
+}
+
 // Obtener todos los cierres ordenados por fecha más reciente
 $stmt = $db->query("SELECT * FROM cierres ORDER BY fecha_hora DESC");
 $cierres = $stmt->fetchAll(PDO::FETCH_ASSOC);
