@@ -182,7 +182,9 @@ $cierres = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <header>
         <img src="/assets/img/Logo.svg" alt="Batidos Pitaya" class="logo">
         <a href="../logout.php" class="btn btn-salir">Salir</a>
-        <a href="/ventas/" class="btn">Volver a Ventas</a>
+        <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'ventas'): ?>
+            <a href="/ventas/" class="btn">Volver a Ventas</a>
+        <?php endif; ?>
     </header>
     
     <main class="container">
