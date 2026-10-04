@@ -50,7 +50,8 @@ try {
 
     // Procesar la venta
     $nombreCliente = !empty($data['nombreCliente']) ? trim($data['nombreCliente']) : null;
-    $result = procesarVenta($data['productos'], $data['tipoPago'], $nombreCliente);
+    $clubPitaya = !empty($data['clubPitaya']) ? trim($data['clubPitaya']) : null;
+    $result = procesarVenta($data['productos'], $data['tipoPago'], $nombreCliente, $clubPitaya);
     
     if (!$result['success']) {
         sendJsonResponse(false, $result['message'] ?? 'Error al procesar venta');

@@ -114,6 +114,9 @@ header('Content-Type: text/html; charset=utf-8');
         <?php if (!empty($venta['nombre_cliente'])): ?>
             <p style="text-align:center;">Bienvenid@ <?= htmlspecialchars($venta['nombre_cliente']) ?></p>
         <?php endif; ?>
+        <?php if (!empty($venta['club_pitaya'])): ?>
+            <p style="text-align:center;">Club Pitaya: <?= htmlspecialchars($venta['club_pitaya']) ?></p>
+        <?php endif; ?>
         
         <p>Fecha: <?= formatearFecha($venta['fecha_hora']) ?> <?= formatearHora($venta['fecha_hora']) ?></p>
         
@@ -160,6 +163,9 @@ header('Content-Type: text/html; charset=utf-8');
         
         <?php if (!empty($venta['nombre_cliente'])): ?>
             <p style="text-align:center; font-weight:bold; font-size:16px;"><?= strtoupper(htmlspecialchars($venta['nombre_cliente'])) ?></p>
+        <?php endif; ?>
+        <?php if (!empty($venta['club_pitaya'])): ?>
+            <p style="text-align:center; font-weight:bold; font-size:14px;">CLUB PITAYA: <?= strtoupper(htmlspecialchars($venta['club_pitaya'])) ?></p>
         <?php endif; ?>
         
         <p>Fecha: <?= formatearFecha($venta['fecha_hora']) ?> <?= formatearHora($venta['fecha_hora']) ?></p>

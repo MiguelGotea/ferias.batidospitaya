@@ -59,7 +59,7 @@ function obtenerDetallesVenta($ventaId) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function procesarVenta($productos, $tipoPago, $nombreCliente = null) {
+function procesarVenta($productos, $tipoPago, $nombreCliente = null, $clubPitaya = null) {
     global $db;
     
     try {
@@ -69,8 +69,8 @@ function procesarVenta($productos, $tipoPago, $nombreCliente = null) {
         $fechaHoy = date('Y-m-d');
         
         // Crear venta con fecha_hora y fecha_registro de Nicaragua
-        $stmtVenta = $db->prepare("INSERT INTO ventas (tipo_pago, nombre_cliente, fecha_hora, fecha_registro) VALUES (?, ?, ?, ?)");
-        $stmtVenta->execute([$tipoPago, $nombreCliente, $fechaActual, $fechaHoy]);
+        $stmtVenta = $db->prepare("INSERT INTO ventas (tipo_pago, nombre_cliente, club_pitaya, fecha_hora, fecha_registro) VALUES (?, ?, ?, ?, ?)");
+        $stmtVenta->execute([$tipoPago, $nombreCliente, $clubPitaya, $fechaActual, $fechaHoy]);
         $ventaId = $db->lastInsertId();
         
         // Agregar detalles (capturando nombre, precio actual y hora)

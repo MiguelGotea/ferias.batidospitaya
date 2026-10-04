@@ -393,9 +393,15 @@ $ventaActiva = obtenerVentaActiva();
             </div>
             
             <!-- En la sección pedido-section, justo después del pedido-header -->
-            <div class="cliente-section" style="margin-bottom: 15px;">
-                <label for="nombreCliente" style="display: block; margin-bottom: 5px; color: #666;">Nombre del Cliente</label>
-                <input type="text" id="nombreCliente" class="input-notas" placeholder="Ingrese nombre del cliente">
+            <div class="cliente-section" style="margin-bottom: 15px; display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label for="nombreCliente" style="display: block; margin-bottom: 5px; color: #666;">Nombre del Cliente</label>
+                    <input type="text" id="nombreCliente" class="input-notas" placeholder="Ingrese nombre del cliente">
+                </div>
+                <div style="flex: 1;">
+                    <label for="clubPitaya" style="display: block; margin-bottom: 5px; color: #666;">Club Pitaya</label>
+                    <input type="text" id="clubPitaya" class="input-notas" placeholder="Ingrese Club Pitaya">
+                </div>
             </div>
             
             <table class="tabla-pedido">
@@ -447,6 +453,7 @@ $ventaActiva = obtenerVentaActiva();
             const btnCerrarEvento = document.getElementById('cerrarEvento');
             const btnPagos = document.querySelectorAll('.btn-pago');
             const inputNombreCliente = document.getElementById('nombreCliente');
+            const inputClubPitaya = document.getElementById('clubPitaya');
             
             // Función para actualizar el estado del botón imprimir
             function actualizarEstadoBotonImprimir() {
@@ -588,7 +595,8 @@ $ventaActiva = obtenerVentaActiva();
                     const ventaData = {
                         productos: productosValidados,
                         tipoPago: tipoPagoSeleccionado,
-                        nombreCliente: (inputNombreCliente ? inputNombreCliente.value.trim() : '') || null
+                        nombreCliente: (inputNombreCliente ? inputNombreCliente.value.trim() : '') || null,
+                        clubPitaya: (inputClubPitaya ? inputClubPitaya.value.trim() : '') || null
                     };
             
                     // Mostrar datos que se enviarán (para diagnóstico)
@@ -628,6 +636,9 @@ $ventaActiva = obtenerVentaActiva();
                     tipoPagoSeleccionado = null;
                     if (inputNombreCliente) {
                         inputNombreCliente.value = '';
+                    }
+                    if (inputClubPitaya) {
+                        inputClubPitaya.value = '';
                     }
                     btnPagos.forEach(b => b.classList.remove('active'));
                     actualizarTablaPedido();

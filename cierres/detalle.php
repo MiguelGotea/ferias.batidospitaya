@@ -33,6 +33,7 @@ $query = "
         v.fecha_hora as fecha_venta,
         v.tipo_pago,
         v.nombre_cliente,
+        v.club_pitaya,
         dv.id as detalle_id,
         dv.producto_id,
         COALESCE(dv.nombre_producto, p.nombre) as producto_nombre,
@@ -382,7 +383,8 @@ foreach ($productosVendidos as $producto) {
                         $ventasAgrupadas[$ventaId] = [
                             'fecha_venta' => $producto['fecha_venta'],
                             'tipo_pago' => $producto['tipo_pago'],
-                            'nombre_cliente' => $producto['nombre_cliente'],  // <-- Añade esta línea
+                            'nombre_cliente' => $producto['nombre_cliente'],
+                            'club_pitaya' => $producto['club_pitaya'] ?? null,
                             'productos' => []
                         ];
                     }
@@ -398,9 +400,16 @@ foreach ($productosVendidos as $producto) {
                             </span>
                         </h3>
                         
-                        <?php if (!empty($venta['nombre_cliente'])): ?>
+                        <?php if (!empty($venta['nombre_cliente']) || !empty($venta['club_pitaya'])): ?>
                             <p style="margin: 5px 0 10px; color: #0E544C; font-weight: bold; font-size: 15px;">
-                                <strong>Cliente:</strong> <?= htmlspecialchars($venta['nombre_cliente']) ?>
+                                <?php if (!empty($venta['nombre_cliente'])): ?>
+                                    <strong>Cliente:</strong> <?= htmlspecialchars($venta['nombre_cliente']) ?>
+                                <?php endif; ?>
+                                <?php if (!empty($venta['club_pitaya'])): ?>
+                                    <span style="<?= !empty($venta['nombre_cliente']) ? 'margin-left: 15px;' : '' ?>">
+                                        <strong>Club Pitaya:</strong> <?= htmlspecialchars($venta['club_pitaya']) ?>
+                                    </span>
+                                <?php endif; ?>
                             </p>
                         <?php endif; ?>
                         

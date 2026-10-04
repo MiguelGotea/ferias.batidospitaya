@@ -79,6 +79,7 @@ CREATE TABLE `ventas` (
   `cerrada` tinyint(1) NOT NULL DEFAULT 0,
   `fecha_cierre` datetime DEFAULT NULL COMMENT 'Fecha y hora del cierre',
   `nombre_cliente` varchar(100) DEFAULT NULL,
+  `club_pitaya` varchar(100) DEFAULT NULL,
   `fecha_hora` datetime NOT NULL DEFAULT current_timestamp() COMMENT 'Fecha y hora del registro',
   `Observaciones` varchar(255) DEFAULT NULL,
   `fecha_registro` date NOT NULL DEFAULT current_timestamp() COMMENT 'Fecha en que se registró'
